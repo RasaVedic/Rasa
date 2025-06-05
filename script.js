@@ -86,6 +86,14 @@ let siteLang = "en";    // Site-wide language
 let modalLang = "en";   // Modal-only language
 let currentBook = null, currentIdx = 0, currentList = null;
 
+// ---- YAHAN showToast function likho ----
+function showToast(msg) {
+  const toast = document.getElementById('toast');
+  toast.textContent = msg;
+  toast.className = 'toast show';
+  setTimeout(() => { toast.className = 'toast'; }, 1600);
+}
+
 // ---------- UI UPDATE LOGIC ----------------
 
 function updateSiteLanguage() {
@@ -176,27 +184,67 @@ function copyHadith() {
   const h = currentBook.hadith[currentIdx];
   let text = h[modalLang] || h.en;
   navigator.clipboard.writeText(text);
-  alert(uiText[siteLang].copy + "!");
+  showToast(uiText[siteLang].copy + "!");
 }
 function shareHadith() {
   const url = location.origin + location.pathname + "#" + currentBook.id;
-  navigator.clipboard.writeText(url);
-  alert(uiText[siteLang].share + "!");
+  const text = currentBook.hadith[currentIdx][modalLang] || currentBook.hadith[currentIdx].en;
+
+  if (navigator.share) {
+    navigator.share({
+      title: "Hadith Share",
+      text: text,
+      url: url
+    }).then(() => {
+      showToast("Shared successfully!");
+    }).catch(() => {
+      showToast("Share cancelled or failed.");
+    });
+  } else {
+    navigator.clipboard.writeText(url)
+      .then(() => {
+        showToast("Link copied: " + url);
+      })
+      .catch(() => {
+        showToast("Could not copy link.");
+      });
+  }
 }
 
 // --------- SEARCH LOGIC ----------------------
 document.getElementById("searchInput").addEventListener("input", (e) => {
-  const q = e.target.value.toLowerCase();
+  const q = e.target.value.trim().toLowerCase();
   filterGrid(hadithBooks, "hadithGrid", q);
   filterGrid(otherBooks, "hadithGrid2", q);
 });
+
 function filterGrid(list, gridId, q) {
   const el = document.getElementById(gridId);
   el.innerHTML = "";
+  // Show all if empty search
+  if (!q) {
+    list.forEach(item => {
+      const btn = document.createElement("button");
+      btn.className = "hadith-btn";
+      btn.onclick = () => openModal(item, 0, list);
+      btn.innerHTML = `
+        <span class="en">${item[siteLang]}</span>
+        <span class="ar">${item.ar}</span>
+      `;
+      el.appendChild(btn);
+    });
+    return;
+  }
+  // Filter on book name OR any hadith text (en/hi/ar)
   list.filter(item =>
     item.en.toLowerCase().includes(q) ||
-    item.hi.toLowerCase().includes(q) ||
-    item.ar.includes(q)
+    (item.hi && item.hi.toLowerCase().includes(q)) ||
+    (item.ar && item.ar.includes(q)) ||
+    (item.hadith && item.hadith.some(h =>
+      (h.en && h.en.toLowerCase().includes(q)) ||
+      (h.hi && h.hi.toLowerCase().includes(q)) ||
+      (h.ar && h.ar.includes(q))
+    ))
   ).forEach(item => {
     const btn = document.createElement("button");
     btn.className = "hadith-btn";
@@ -236,6 +284,7 @@ document.getElementById("copyBtn").onclick = copyHadith;
 document.getElementById("shareBtn").onclick = shareHadith;
 document.getElementById("backBtn").onclick = closeModal;
 document.getElementById("switchLangBtn").onclick = switchLanguage;
+document.getElementById("prevBtn").onclick = prevHadith;
 document.getElementById("nextBtn").onclick = nextHadith;
 
 // --------- MODAL: OPEN BY HASH ---------
