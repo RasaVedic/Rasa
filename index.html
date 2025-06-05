@@ -1,161 +1,79 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <meta name="description" content="BhaiVedic - Vedic Knowledge, References, and Community"/>
-  <title>BhaiVedic</title>
-  <link rel="stylesheet" href="style.css"/>
-  <link rel="manifest" href="manifest.json"/>
-  <meta property="og:title" content="BhaiVedic"/>
-  <meta property="og:description" content="Vedic Knowledge, References, and Community"/>
-  <meta property="og:image" content"/>
-  <meta name="theme-color" content="#f7e6c4"/>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>BHAIVEDIC Hadith App</title>
+  <link rel="stylesheet" href="style.css">
 </head>
 <body>
-  <!-- Header with Brand and Menu -->
-  <header>
-    <div class="brand">
-      <img src="assets/logo.png" alt="BhaiVedic Logo" class="logo"/>
-      <h1>BhaiVedic</h1>
-    </div>
-    <button id="menuBtn" aria-label="Open menu" class="menu-btn">
-      <span class="menu-icon">&#9776;</span>
-    </button>
+  <!-- Top Banner -->
+  <header class="top-banner">
+    <span class="bhaivedic"><span class="bhai">BHAI</span><span class="vedic">VEDIC</span></span>
+    <button class="menu-btn" id="menuBtn">&#9776;</button>
   </header>
-
-  <!-- Side Menu Drawer -->
-  <nav id="li><a href="#topics">Topics</a></li>
-      <li><a href="#references">References</a></li>
-      <li><a href="#calendar">Vedic Calendar</a></li>
-      <li><a href="#contribute">Contribute</a></li>
-      <li><a href="#about">About</a></li>
-    </ul>
+  
+  <!-- Side Menu -->
+  <nav class="side-menu" id="sideMenu">
+    <div class="side-menu-content">
+      <h2 id="aboutTitle"></h2>
+      <p id="aboutDesc"></p>
+      <h2 id="faqTitle"></h2>
+      <div class="faq-icons">
+        <a href="https://x.com/BhaiVedic" target="_blank" title="X (Twitter)"><img src="https://cdn.jsdelivr.net/gh/simple-icons/simple-icons/icons/x.svg" alt="X"></a>
+        <a href="https://github.com/BhaiVedic" target="_blank" title="GitHub"><img src="https://cdn.jsdelivr.net/gh/simple-icons/simple-icons/icons/github.svg" alt="GitHub"></a>
+        <a href="mailto:your@email.com" title="Email"><img src="https://cdn.jsdelivr.net/gh/simple-icons/simple-icons/icons/maildotru.svg" alt="Email"></a>
+      </div>
+      <h2 id="langTitle"></h2>
+      <div class="lang-toggle">
+        <button id="langEn" class="active">English</button>
+        <button id="langHi">हिन्दी</button>
+      </div>
+    </div>
   </nav>
-
+  <div class="side-menu-blur" id="sideMenuBlur"></div>
+  
+  <!-- Search Bar Section -->
+  <div class="search-section">
+    <input type="text" id="searchInput" placeholder="" autocomplete="off">
+    <span class="search-icon">&#128269;</span>
+    <a href="#" class="search-tips"></a>
+  </div>
+  
   <!-- Main Content -->
   <main>
-    <!-- Trending Topics -->
-    <section class="trending-section">
-      <h2>Trending Topics</h2>
-      <div id="trendingTopics" class="trending-grid"></div>
-    </section>
-
-    <!-- Thought of the Day -->
-    <section class="thought-section">
-      <h2>Thought of the>
-input type="search" id="searchBar" placeholder="Search topics, references, Vedic content..." aria-label="Search"/>
-    </section>
-
-    <!-- Topics Grid -->
-    <section id="topics" class="topics-section">
-      <h2>Topics</h2>
-      <div id="topicsGrid" class="topics-grid"></div>
-    </section>
-
-    <!-- References Grid -->
-    <section id="references" class="references-section">
-      <h2>References</h2>
-      <div id="referencesGrid" class="references-grid"></div>
-    </section>
-
-    <!-- Topic/Reference Detail Modal -->
-    <div id="detailModal" class="modal hidden">
-      <div class="modal-content">
-        <button id="backBtn" class="back-btn" aria-label="Back">&#8592; Back</button>
-        <div id="detailContent"></div>
-        <div class="modal-actions">
-          <button id="bookmarkBtn" class="bookmark-btn" aria-label="Bookmark">&#9734; Bookmark</button>
-          <button id="shareBtn" class="share-btn" aria-label="Share">&#128279; Share</button>
-          <button id="copyBtn" class="copy-btn" aria-label="Copy link">&#128203; Copy</button>
-          <button id="audioBtn" class="audio-btn" aria-label="Listen">&#127911; Listen</button>
-          <button id="printBtn" class="print-btn" aria-label="Print">&#128424; Print</button>
-          <button id="pdfBtn" class="pdf-btn" aria-label="Download PDF">&#128462; PDF</button>
-        </div>
-        <!-- Comments/Discussion Section -->
-        <div id="commentsSection" class="comments-section">
-          <h3>Comments</h3>
-          <div id="commentsList"></div>
-          <form id="commentForm">
-            <input type="text" id="commentInput" placeholder="Add a comment..." required maxlength="200"/>
-            <button type="submit">Post</button>
-          </form>
-        </div>
-      </div>
-    </div>
-
-    <!-- Vedic Calendar -->
-    <section id="calendar" class="calendar-section">
-      <h2>Vedic Calendar</h2>
-      <div id="vedicCalendar"></div>
-    </section>
-
-    <!-- Contribute Section -->
-    <section id="contribute" class="contribute-section">
-      <h2>Contribute to BhaiVedic</h2>
-      <form id="contributeForm">
-        <input type="text" id="contribName" placeholder="Your Name (optional)"/>
-        <textarea id="contribContent" placeholder="Your Vedic Knowledge / Reference" required></textarea>
-        <button type="submit">Submit</button>
-      </form>
-    </section>
-
-    <!-- About, FAQ, Support, Donate, etc. -->
-    <section id="about" class="about-section">
-      <h2>About BhaiVedic</h2>
-      <p>
-        BhaiVedic is an open knowledge platform for Vedic wisdom, references, and community discussions.<br>
-        <a href="mailto:contact@bhaivedic.in">Contact Us</a> | 
-        <a href="https://wa.me/919999999999?text=Hello%20BhaiVedic" target="_blank">WhatsApp</a> | 
-        <a href="#faq">FAQ</a>
-      </p>
-      <p>
-        <button id="donateBtn" class="donate-btn">Support / Donate</button>
-      </p>
-    </section>
-    <section id="faq" class="faq-section">
-      <h2>FAQ</h2>
-      <ul>
-        <li><strong>Is BhaiVedic free/reference detail.</li>
-      </ul>
-    </section>
+    <div class="section-title" id="majorBooks"></div>
+    <div class="hadith-grid" id="hadithGrid"></div>
+    <div class="section-title" id="otherCollections"></div>
+    <div class="hadith-grid" id="hadithGrid2"></div>
   </main>
-
-  <!-- Floating Action Buttons (Scroll Top, Theme Picker, etc.) -->
-  <div class="fab-group">
-    <button id="scrollTopBtn" class="fab" aria-label="Scroll to top">&#8679;</button>
-    <button id="themePickerBtn" class="fab" aria-label="Pick theme color">&#127912;</button>
-  </div>
-
-  <!-- Notification/Update Banner -->
-  <div id="updateBanner" class="update-banner hidden">
-    <span id="updateText"></span>
-    <button id="dismissBannerBtn" aria-label="Dismiss">&times;</button>
-  </div>
-
-  <!-- Bookmark/Export/Import Modal -->
-  <div id="bookmarkModal" class="modal hidden">
-    <div class="modal-content">
-      <h3>Your Bookmarks</h3>
-      < <button id="exportBookmarksBtn">Export</button>
-        <button id="importBookmarksBtn">Import</button>
-        <input type="file" id="importFileInput" style="display:none"/>
+  
+  <!-- Modal for Hadith -->
+  <div class="modal-blur" id="modalBlur"></div>
+  <div class="modal" id="modal">
+    <div class="modal-content" id="modalContent">
+      <div class="hadith-arabic" id="modalArabic"></div>
+      <div class="hadith-english" id="modalEnglish"></div>
+      <div class="hadith-hindi" id="modalHindi"></div>
+      <div class="modal-actions">
+        <button id="copyBtn" title=""><span class="icon">📋</span> <span id="copyLabel"></span></button>
+        <button id="shareBtn" title=""><span class="icon">🔗</span> <span id="shareLabel"></span></button>
+        <button id="backBtn" title=""><span class="icon">⬅️</span> <span id="backLabel"></span></button>
+        <button id="switchLangBtn" title=""><span class="icon">🌐</span> <span id="switchLangLabel"></span></button>
+        <button id="nextBtn" title=""><span class="icon">➡️</span> <span id="nextLabel"></span></button>
       </div>
-      <button id="closeBookmarkModalBtn" class="close-menu">&times;</button>
     </div>
   </div>
-
-  <!-- Print/Download Modal (optional, for PDF) -->
-  <div id="printModal" class="modal hidden">
-    <div class=">Print or Download</h3>
-      <div id="printContent"></div>
-      <button id="doPrintBtn">Print</button>
-      <button id="doDownloadPdfBtn">Download PDF</button>
-      <button id="closePrint>
+  
+  <!-- Footer -->
+  <footer>
+    <div>© BHAIVEDIC</div>
+    <div id="footerEducational"></div>
+    <div>
+      <a href="https://x.com/BhaiVedic" target="_blank"><img src="https://cdn.jsdelivr.net/gh/simple-icons/simple-icons/icons/x.svg" class="footer-icon" alt="X"></a>
+      <span id="footerContact"></span>
     </div>
-  </div>
-
-  <!-- Scripts -->
+  </footer>
   <script src="script.js"></script>
 </body>
 </html>
