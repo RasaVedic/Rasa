@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>QIHEENA</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="QIHEENA - Knowledge & Awareness Platform">
+  <meta property="og:title" content="QIHEENA">
+  <meta property="og:description" content="QIHEENA: Educational platform for knowledge & awareness.">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://QIHeena.in/">
+  <meta property="og:image" content="assets/img/og-image.png">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="theme-color" content="#181d2a">
+  <link rel="manifest" href="manifest.json">
+  <link rel="icon" href="assets/img/favicon.ico">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700&family=Hind:wght@400;700&family=Poppins:wght@400;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="assets/css/style.css">
+</head>
+<body>
+  <!-- Welcome Banner -->
+  <div id="welcomeBanner" style="display:none;position:fixed;top:2em;left:50%;transform:translateX(-50%);background:var(--primary);color:#fff;padding:1em 2em;border-radius:12px;font-size:1.2em;z-index:1000;box-shadow:0 2px 16px #007bff44;">
+    <span data-translate="welcome">Welcome to QIHeena! Discover knowledge & awareness.</span>
+  </div>
+
+  <header>
+    <button onclick="toggleMenu()" aria-label="Open menu">&#9776;</button>
+    <h1 data-translate="home">QIHEENA</h1>
+    <button id="darkModeToggle" aria-label="Toggle Dark Mode" aria-pressed="false">&#127769;</button>
+  </header>
+
+  <aside id="sideMenu" class="hidden">
+    <button onclick="toggleMenu()" aria-label="Close menu">&#10005;</button>
+    <hr>
+    <div style="font-weight:bold; margin-top:1em;">About</div>
+    <div style="font-size:0.97em; color:#555; margin:0.5em 0 1em 0;">
+      QIHEENA is an educational initiative to spread knowledge and awareness.<br>
+      &copy; 2025 QIHEENA. All content is for educational use only.
+    </div>
+    <hr>
+    <h3 data-translate="change_language" style="margin-top:1em;">Change Language</h3>
+    <button onclick="setLanguage('en')" id="lang-en">English</button>
+    <button onclick="setLanguage('hi')" id="lang-hi">हिन्दी</button>
+    <hr>
+    <div id="menu-topics-title" style="font-weight:bold; margin-top:1em;" data-translate="topics">Topics</div>
+    <hr>
+    <ul id="sideMenuTopics" style="list-style:none; padding:0; margin:0 0 1em 0;"></ul>
+    <div class="menu-social" style="margin-top:2em;">
+      <a href="https://instagram.com/QIHeena" target="_blank" aria-label="Instagram">
+        <!-- Instagram SVG -->
+        <svg width="20" height="20" fill="currentColor" viewBox="0 0 24 24"><path d="M7.75 2h8.5A5.75 5.75 0 0 1 22 7.75v8.5A5.75 5.75 0 0 1 16.25 22h-8.5A5.75 5.75 0 0 1 2 16.25v-8.5A5.75 5.75 0 0 1 7.75 2Zm0 1.5A4.25 4.25 0 0 0 3.5 7.75v8.5A4.25 4.25 0 0 0 7.75 20.5h8.5A4.25 4.25 0 0 0 20.5 16.25v-8.5A4.25 4.25 0 0 0 16.25 3.5h-8.5ZM12 7a5 5 0 1 1 0 10 5 5 0 0 1 0-10Zm0 1.5a3.5 3.5 0 1 0 0 7 3.5 3.5 0 0 0 0-7Zm5.25.75a1 1 0 1 1-2 0 1 1 0 0 1 2 0Z"/></svg>
+      </a>
+      <a href="https://x.com/QIHeena" target="_blank" aria-label="X">
+        <!-- X SVG -->
+        <svg width="20" height="20" fill="currentColor" viewBox="0 0 24 24"><path d="M19.633 3.001H4.365A1.368 1.368 0 0 0 3 4.363v15.274A1.368 1.368 0 0 0 4.365 21h15.274A1.368 1.368 0 0 0 21 19.637V4.363A1.368 1.368 0 0 0 19.633 3.001zm-5.331 12.084l-2.093-2.464-2.093 2.464h-1.563l2.875-3.386-2.875-3.385h1.563l2.093 2.463 2.093-2.463h1.563l-2.875 3.385 2.875 3.386z"/></svg>
+      </a>
+    </div>
+  </aside>
+
+  <main>
+    <input id="searchInput" placeholder="Search..." oninput="handleSearch(event)" data-translate="search">
+    <div id="searchResults" class="hidden"></div>
+    <div id="loadingSpinner" style="display:none;text-align:center;margin:2em;">
+      <span data-translate="loading" style="background:var(--primary);color:#fff;padding:0.7em 1.2em;border-radius:8px;">Loading...</span>
+    </div>
+    <section id="topic-buttons"></section>
+    <div id="errorBanner" class="hidden"></div>
+  </main>
+
+  <footer class="footer">
+    <span style="font-weight:bold;">&copy; 2025 QIHEENA</span>
+    <div style="font-size:0.95em; margin:0.4em 0 0.8em 0;">
+      For education purpose only. All content is for knowledge &amp; awareness.
+    </div>
+    <div>
+      Follow us:
+      <a href="https://instagram.com/QIHEENA" target="_blank" aria-label="Instagram">
+        <svg width="20" height="20" fill="currentColor" viewBox="0 0 24 24"><path d="M7.75 2h8.5A5.75 5.75 0 0 1 22 7.75v8.5A5.75 5.75 0 0 1 16.25 22h-8.5A5.75 5.75 0 0 1 2 16.25v-8.5A5.75 5.75 0 0 1 7.75 2Zm0 1.5A4.25 4.25 0 0 0 3.5 7.75v8.5A4.25 4.25 0 0 0 7.75 20.5h8.5A4.25 4.25 0 0 0 20.5 16.25v-8.5A4.25 4.25 0 0 0 16.25 3.5h-8.5ZM12 7a5 5 0 1 1 0 10 5 5 0 0 1 0-10Zm0 1.5a3.5 3.5 0 1 0 0 7 3.5 3.5 0 0 0 0-7Zm5.25.75a1 1 0 1 1-2 0 1 1 0 0 1 2 0Z"/></svg>
+      </a>
+      <a href="https://x.com/QIHeena" target="_blank" aria-label="X">
+        <svg width="20" height="20" fill="currentColor" viewBox="0 0 24 24"><path d="M19.633 3.001H4.365A1.368 1.368 0 0 0 3 4.363v15.274A1.368 1.368 0 0 0 4.365 21h15.274A1.368 1.368 0 0 0 21 19.637V4.363A1.368 1.368 0 0 0 19.633 3.001zm-5.331 12.084l-2.093-2.464-2.093 2.464h-1.563l2.875-3.386-2.875-3.385h1.563l2.093 2.463 2.093-2.463h1.563l-2.875 3.385 2.875 3.386z"/></svg>
+      </a>
+    </div>
+  </footer>
+  <script src="assets/js/main.js"></script>
+</body>
+</html>

@@ -1,0 +1,21 @@
+{
+  "search": "खोजें",
+  "home": "QIHEENA",
+  "topics": "विषय",
+  "references": "संदर्भ",
+  "dark_mode": "डार्क मोड",
+  "light_mode": "लाइट मोड",
+  "back": "पीछे जाएं",
+  "no_results": "कोई परिणाम नहीं मिला।",
+  "see_details": "विवरण देखें",
+  "see_reference": "संदर्भ देखें",
+  "switch_language": "भाषा बदलें",
+  "copy": "कॉपी करें",
+  "copied": "कॉपी हो गया!",
+  "close": "वापस जाएं",
+  "change_language": "भाषा बदलें",
+  "share": "साझा करें",
+  "share_not_supported": "यह डिवाइस साझा करने का समर्थन नहीं करता।",
+  "loading": "लोड हो रहा है...",
+  "welcome": "QIHEENA में आपका स्वागत है! ज्ञान और जागरूकता खोजें।"
+}
