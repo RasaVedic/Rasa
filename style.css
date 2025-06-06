@@ -1,4 +1,6 @@
 @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Noto+Sans+Devanagari:wght@400;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Scheherazade+New:wght@400;700&display=swap');
 
 :root {
   --bg-main: #121212;
@@ -41,11 +43,11 @@ body {
 }
 .bhai { color: #fff; }
 .vedic { color: var(--saffron); }
-}
+
 .menu-btn {
   position: fixed;
-  top: 20px;      /* Upar se distance, adjust kar sakte hain */
-  left: 20px;     /* Left se distance, jitna chahein (16px, 24px, etc.) */
+  top: 20px;
+  left: 20px;
   z-index: 1000;
   padding: 10px 16px;
   background: #222;
@@ -56,6 +58,7 @@ body {
   border-radius: 6px;
   box-shadow: 0 2px 8px rgba(0,0,0,0.10);
 }
+
 /* Side Menu */
 .side-menu {
   height: 100vh;
@@ -180,6 +183,28 @@ body {
   .hadith-btn { width: 48%; min-width: 180px; }
 }
 
+/* No Result Message */
+.no-result {
+  color: #ff7eb9;
+  text-align: center;
+  padding: 18px 0;
+  font-size: 1.15em;
+  font-weight: 600;
+  opacity: 0.89;
+}
+
+.loader {
+  display: none;
+  color: var(--teal);
+  text-align: center;
+  font-size: 1.13em;
+  padding: 14px 0;
+  letter-spacing: 0.06em;
+}
+#loader[style*="block"] {
+  display: block;
+}
+
 .modal-blur {
   position: fixed; inset: 0;
   background: rgba(18,18,18,0.62);
@@ -200,6 +225,7 @@ body {
   z-index: 32;
   display: none;
   animation: growIn 0.19s cubic-bezier(.4,1.3,.7,1.01);
+  overflow-y: auto;
 }
 .modal.show { display: block; }
 @keyframes growIn {
@@ -247,7 +273,8 @@ body {
   margin: 0 2px;
   transition: background .15s;
 }
-.modal-actions button:hover { background: #1e1020; color: #fff; }
+.modal-actions button:disabled { background: #444; color: #aaa; cursor: not-allowed; }
+.modal-actions button:hover:not(:disabled) { background: #1e1020; color: #fff; }
 .icon { font-size: 1.2em; vertical-align: middle; margin-right: 2px; }
 
 footer {

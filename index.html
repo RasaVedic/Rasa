@@ -10,69 +10,80 @@
   <!-- Top Banner -->
   <header class="top-banner">
     <span class="bhaivedic"><span class="bhai">BHAI</span><span class="vedic">VEDIC</span></span>
-    <button class="menu-btn" id="menuBtn">&#9776;</button>
+    <button class="menu-btn" id="menuBtn" aria-label="Open menu">&#9776;</button>
   </header>
-  
+
   <!-- Side Menu -->
-  <nav class="side-menu" id="sideMenu">
+  <nav class="side-menu" id="sideMenu" aria-label="Sidebar">
     <div class="side-menu-content">
       <h2 id="aboutTitle"></h2>
       <p id="aboutDesc"></p>
       <h2 id="faqTitle"></h2>
       <div class="faq-icons">
-        <a href="https://x.com/BhaiVedic" target="_blank" title="X (Twitter)"><img src="https://cdn.jsdelivr.net/gh/simple-icons/simple-icons/icons/x.svg" alt="X"></a>
-        <a href="https://github.com/BhaiVedic" target="_blank" title="GitHub"><img src="https://cdn.jsdelivr.net/gh/simple-icons/simple-icons/icons/github.svg" alt="GitHub"></a>
-        <a href="mailto:your@email.com" title="Email"><img src="https://cdn.jsdelivr.net/gh/simple-icons/simple-icons/icons/maildotru.svg" alt="Email"></a>
+        <a href="https://x.com/BhaiVedic" target="_blank" title="X (Twitter)" aria-label="X (Twitter)">
+          <img src="https://cdn.jsdelivr.net/gh/simple-icons/simple-icons/icons/x.svg" alt="X">
+        </a>
+        <a href="https://github.com/BhaiVedic" target="_blank" title="GitHub" aria-label="GitHub">
+          <img src="https://cdn.jsdelivr.net/gh/simple-icons/simple-icons/icons/github.svg" alt="GitHub">
+        </a>
+        <a href="mailto:your@email.com" title="Email" aria-label="Email">
+          <img src="https://cdn.jsdelivr.net/gh/simple-icons/simple-icons/icons/maildotru.svg" alt="Email">
+        </a>
       </div>
       <h2 id="langTitle"></h2>
-      <div class="lang-toggle">
-        <button id="langEn" class="active">English</button>
-        <button id="langHi">हिन्दी</button>
+      <div class="lang-toggle" role="group" aria-label="Language switcher">
+        <button id="langEn" class="active" aria-pressed="true">English</button>
+        <button id="langHi" aria-pressed="false">हिन्दी</button>
       </div>
     </div>
   </nav>
   <div class="side-menu-blur" id="sideMenuBlur"></div>
-  
+
   <!-- Search Bar Section -->
   <div class="search-section">
-    <input type="text" id="searchInput" placeholder="" autocomplete="off">
+    <input type="text" id="searchInput" placeholder="" autocomplete="off" aria-label="Search books or hadith">
     <span class="search-icon">&#128269;</span>
-    <a href="#" class="search-tips"></a>
+    <a href="#" class="search-tips" id="searchTips" tabindex="0"></a>
   </div>
-  
+
+  <!-- Loader (for async/loading states) -->
+  <div id="loader" style="display:none;" aria-live="polite" class="loader">Loading...</div>
+
   <!-- Main Content -->
   <main>
     <div class="section-title" id="majorBooks"></div>
-    <div class="hadith-grid" id="hadithGrid"></div>
+    <div class="hadith-grid responsive" id="hadithGrid"></div>
     <div class="section-title" id="otherCollections"></div>
-    <div class="hadith-grid" id="hadithGrid2"></div>
-    <div class="toast" id="toast"></div> 
- </main>
-  
+    <div class="hadith-grid responsive" id="hadithGrid2"></div>
+    <div class="toast" id="toast" role="status" aria-live="polite"></div>
+  </main>
+
   <!-- Modal for Hadith -->
   <div class="modal-blur" id="modalBlur"></div>
-  <div class="modal" id="modal">
+  <div class="modal" id="modal" role="dialog" aria-modal="true" aria-labelledby="modalArabic modalEnglish modalHindi">
     <div class="modal-content" id="modalContent">
       <div class="hadith-arabic" id="modalArabic"></div>
       <div class="hadith-english" id="modalEnglish"></div>
       <div class="hadith-hindi" id="modalHindi"></div>
       <div class="modal-actions">
-        <button id="copyBtn" type="button" title=""><span class="icon">📋</span> <span id="copyLabel"></span></button>
-        <button id="shareBtn" type="button" title=""><span class="icon">🔗</span> <span id="shareLabel"></span></button>
-        <button id="backBtn" title=""><span class="icon">⬅️</span> <span id="backLabel"></span></button>
-        <button id="switchLangBtn" title=""><span class="icon">🌐</span> <span id="switchLangLabel"></span></button>
-        <button id="nextBtn" title=""><span class="icon">➡️</span> <span id="nextLabel"></span></button>
-        <button id="prevBtn" type="button" title=""><span class="icon">⬅️</span> <span id="prevLabel"></span></button>
+        <button id="copyBtn" type="button" title="" aria-label="Copy hadith"><span class="icon">📋</span> <span id="copyLabel"></span></button>
+        <button id="shareBtn" type="button" title="" aria-label="Share hadith"><span class="icon">🔗</span> <span id="shareLabel"></span></button>
+        <button id="backBtn" title="" aria-label="Close modal"><span class="icon">⬅️</span> <span id="backLabel"></span></button>
+        <button id="switchLangBtn" title="" aria-label="Switch language"><span class="icon">🌐</span> <span id="switchLangLabel"></span></button>
+        <button id="nextBtn" title="" aria-label="Next hadith"><span class="icon">➡️</span> <span id="nextLabel"></span></button>
+        <button id="prevBtn" type="button" title="" aria-label="Previous hadith"><span class="icon">⬅️</span> <span id="prevLabel"></span></button>
       </div>
     </div>
   </div>
-  
+
   <!-- Footer -->
   <footer>
     <div>© BHAIVEDIC</div>
     <div id="footerEducational"></div>
     <div>
-      <a href="https://x.com/BhaiVedic" target="_blank"><img src="https://cdn.jsdelivr.net/gh/simple-icons/simple-icons/icons/x.svg" class="footer-icon" alt="X"></a>
+      <a href="https://x.com/BhaiVedic" target="_blank" aria-label="X (Twitter)">
+        <img src="https://cdn.jsdelivr.net/gh/simple-icons/simple-icons/icons/x.svg" class="footer-icon" alt="X">
+      </a>
       <span id="footerContact"></span>
     </div>
   </footer>

@@ -16,6 +16,7 @@ const uiText = {
     back: 'Back',
     switchLang: 'Switch Language',
     next: 'Next',
+    noResult: 'No results found'
   },
   hi: {
     searchPlaceholder: 'खोजें...',
@@ -33,6 +34,7 @@ const uiText = {
     back: 'वापस',
     switchLang: 'भाषा बदलें',
     next: 'आगे',
+    noResult: 'कोई परिणाम नहीं मिला'
   }
 };
 
@@ -86,7 +88,7 @@ let siteLang = "en";    // Site-wide language
 let modalLang = "en";   // Modal-only language
 let currentBook = null, currentIdx = 0, currentList = null;
 
-// ---- YAHAN showToast function likho ----
+// ---- showToast function ----
 function showToast(msg) {
   const toast = document.getElementById('toast');
   toast.textContent = msg;
@@ -95,7 +97,6 @@ function showToast(msg) {
 }
 
 // ---------- UI UPDATE LOGIC ----------------
-
 function updateSiteLanguage() {
   // Static text
   document.getElementById('searchInput').placeholder = uiText[siteLang].searchPlaceholder;
@@ -134,6 +135,7 @@ function renderGrid(list, gridId) {
   list.forEach(item => {
     const btn = document.createElement("button");
     btn.className = "hadith-btn";
+    btn.setAttribute('aria-label', item[siteLang]); // accessibility
     btn.onclick = () => openModal(item, 0, list);
     btn.innerHTML = `
       <span class="en">${item[siteLang]}</span>
@@ -153,6 +155,8 @@ function openModal(book, idx, list) {
   document.getElementById("modal").classList.add("show");
   document.getElementById("modalBlur").classList.add("show");
   document.body.style.overflow = "hidden";
+  // scroll to top for modal
+  document.getElementById("modal").scrollTop = 0;
 }
 function showHadith() {
   const h = currentBook.hadith[currentIdx];
@@ -162,6 +166,11 @@ function showHadith() {
   document.getElementById("modalArabic").textContent = h.ar;
   document.getElementById("modalEnglish").textContent = h.en;
   document.getElementById("modalHindi").textContent = h.hi;
+  // Prev button disable logic
+  const prevBtn = document.getElementById("prevBtn");
+  if (prevBtn) {
+    prevBtn.disabled = (currentList.indexOf(currentBook) === 0);
+  }
 }
 function closeModal() {
   document.getElementById("modal").classList.remove("show");
@@ -173,6 +182,11 @@ function nextHadith() {
   idx = (idx + 1) % currentList.length;
   openModal(currentList[idx], 0, currentList);
 }
+function prevHadith() {
+  let idx = currentList.indexOf(currentBook);
+  idx = (idx - 1 + currentList.length) % currentList.length;
+  openModal(currentList[idx], 0, currentList);
+}
 function switchLanguage() {
   // ONLY Modal language change hota hai
   if (modalLang === "en") modalLang = "hi";
@@ -180,34 +194,37 @@ function switchLanguage() {
   else modalLang = "en";
   showHadith();
 }
-function copyHadith() {
+async function copyHadith() {
   const h = currentBook.hadith[currentIdx];
   let text = h[modalLang] || h.en;
-  navigator.clipboard.writeText(text);
-  showToast(uiText[siteLang].copy + "!");
+  try {
+    await navigator.clipboard.writeText(text);
+    showToast(uiText[siteLang].copy + "!");
+  } catch (e) {
+    showToast("Copy feature not supported in this browser.");
+  }
 }
-function shareHadith() {
+async function shareHadith() {
   const url = location.origin + location.pathname + "#" + currentBook.id;
   const text = currentBook.hadith[currentIdx][modalLang] || currentBook.hadith[currentIdx].en;
-
   if (navigator.share) {
-    navigator.share({
-      title: "Hadith Share",
-      text: text,
-      url: url
-    }).then(() => {
-      showToast("Shared successfully!");
-    }).catch(() => {
-      showToast("Share cancelled or failed.");
-    });
-  } else {
-    navigator.clipboard.writeText(url)
-      .then(() => {
-        showToast("Link copied: " + url);
-      })
-      .catch(() => {
-        showToast("Could not copy link.");
+    try {
+      await navigator.share({
+        title: "Hadith Share",
+        text: text,
+        url: url
       });
+      showToast("Shared successfully!");
+    } catch (e) {
+      showToast("Share cancelled or failed.");
+    }
+  } else {
+    try {
+      await navigator.clipboard.writeText(url);
+      showToast("Link copied: " + url);
+    } catch (e) {
+      showToast("Could not copy link.");
+    }
   }
 }
 
@@ -221,33 +238,27 @@ document.getElementById("searchInput").addEventListener("input", (e) => {
 function filterGrid(list, gridId, q) {
   const el = document.getElementById(gridId);
   el.innerHTML = "";
-  // Show all if empty search
-  if (!q) {
-    list.forEach(item => {
-      const btn = document.createElement("button");
-      btn.className = "hadith-btn";
-      btn.onclick = () => openModal(item, 0, list);
-      btn.innerHTML = `
-        <span class="en">${item[siteLang]}</span>
-        <span class="ar">${item.ar}</span>
-      `;
-      el.appendChild(btn);
-    });
+  // Filter on book name OR any hadith text (en/hi/ar)
+  const filtered = (!q)
+    ? list
+    : list.filter(item =>
+        item.en.toLowerCase().includes(q) ||
+        (item.hi && item.hi.toLowerCase().includes(q)) ||
+        (item.ar && item.ar.includes(q)) ||
+        (item.hadith && item.hadith.some(h =>
+          (h.en && h.en.toLowerCase().includes(q)) ||
+          (h.hi && h.hi.toLowerCase().includes(q)) ||
+          (h.ar && h.ar.includes(q))
+        ))
+      );
+  if (!filtered.length) {
+    el.innerHTML = `<div class="no-result">${uiText[siteLang].noResult}</div>`;
     return;
   }
-  // Filter on book name OR any hadith text (en/hi/ar)
-  list.filter(item =>
-    item.en.toLowerCase().includes(q) ||
-    (item.hi && item.hi.toLowerCase().includes(q)) ||
-    (item.ar && item.ar.includes(q)) ||
-    (item.hadith && item.hadith.some(h =>
-      (h.en && h.en.toLowerCase().includes(q)) ||
-      (h.hi && h.hi.toLowerCase().includes(q)) ||
-      (h.ar && h.ar.includes(q))
-    ))
-  ).forEach(item => {
+  filtered.forEach(item => {
     const btn = document.createElement("button");
     btn.className = "hadith-btn";
+    btn.setAttribute('aria-label', item[siteLang]);
     btn.onclick = () => openModal(item, 0, list);
     btn.innerHTML = `
       <span class="en">${item[siteLang]}</span>
@@ -296,3 +307,22 @@ window.addEventListener("load", () => {
     if (book) openModal(book, 0, hadithBooks.concat(otherBooks));
   }
 });
+
+// --------- KEYBOARD SHORTCUTS (Accessibility) -----
+document.addEventListener("keydown", (e) => {
+  if (e.key === "Escape") closeModal();
+});
+
+// --------- LOADER (for future async) --------------
+// HTML me yeh line daal dein jahan list dikhegi:
+/*
+  <div id="loader" style="display:none;">Loading...</div>
+*/
+// Loader show/hide example
+function showLoader(show) {
+  document.getElementById("loader").style.display = show ? "block" : "none";
+}
+
+// --- Responsive hint (CSS/HTML) ---
+// Example HTML me grid ya body pe class="responsive" lagayein
+// Aur CSS me media query use karein
