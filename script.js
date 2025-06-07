@@ -1,4 +1,4 @@
-// ------------- UI TEXTS (EN/HI) ---------------
+// ----------- UI TEXTS (EN/HI) -----------
 const uiText = {
   en: {
     searchPlaceholder: 'Search...',
@@ -38,57 +38,18 @@ const uiText = {
   }
 };
 
-// ---------- HADITH DATA (EN/HI/AR) --------------
-const hadithBooks = [
-  {
-    en: "Sahih al-Bukhari",
-    hi: "सहीह अल-बुखारी",
-    ar: "صحيح البخاري",
-    hadith: [
-      {
-        en: "The reward of deeds depends upon intentions.",
-        hi: "कर्मों का फल नीयत पर निर्भर करता है।",
-        ar: "إنما الأعمال بالنيات"
-      }
-    ],
-    id: "bukhari"
-  },
-  {
-    en: "Sahih Muslim",
-    hi: "सहीह मुस्लिम",
-    ar: "صحيح مسلم",
-    hadith: [
-      {
-        en: "None of you truly believes until he loves for his brother what he loves for himself.",
-        hi: "तुममें से कोई सच्चा मोमिन नहीं हो सकता जब तक वह अपने भाई के लिए वही न चाहे जो वह अपने लिए चाहता है।",
-        ar: "لا يؤمن أحدكم حتى يحب لأخيه ما يحب لنفسه"
-      }
-    ],
-    id: "muslim"
-  },
-];
-const otherBooks = [
-  {
-    en: "Riyad as-Salihin",
-    hi: "रियादुस-सालिहीन",
-    ar: "رياض الصالحين",
-    hadith: [
-      {
-        en: "God does not look at your forms or your wealth but He looks at your hearts and your deeds.",
-        hi: "अल्लाह तुम्हारे रूप या संपत्ति को नहीं देखता, बल्कि तुम्हारे दिल और कर्म को देखता है।",
-        ar: "إن الله لا ينظر إلى صوركم وأموالكم ولكن ينظر إلى قلوبكم وأعمالكم"
-      }
-    ],
-    id: "riyad"
-  }
-];
-
-// ------------ GLOBAL STATE -----------------
-let siteLang = "en";    // Site-wide language
-let modalLang = "en";   // Modal-only language
+// ---------- GLOBAL STATE ---------------
+let hadithBooks = [], otherBooks = [];
+let siteLang = "en";
+let modalLang = "en";
 let currentBook = null, currentIdx = 0, currentList = null;
 
-// ---- showToast function ----
+// ----------- LOADER --------------------
+function showLoader(show) {
+  document.getElementById("loader").style.display = show ? "block" : "none";
+}
+
+// ----------- TOAST ---------------------
 function showToast(msg) {
   const toast = document.getElementById('toast');
   toast.textContent = msg;
@@ -96,9 +57,24 @@ function showToast(msg) {
   setTimeout(() => { toast.className = 'toast'; }, 1600);
 }
 
-// ---------- UI UPDATE LOGIC ----------------
+// --------- DATA FETCH (JSON) -----------
+async function loadHadithData() {
+  showLoader(true);
+  try {
+    const res = await fetch('data/data.json');
+    const data = await res.json();
+    hadithBooks = data.hadithBooks;
+    otherBooks = data.otherBooks;
+    updateSiteLanguage();
+  } catch (e) {
+    showToast("Failed to load data.");
+  }
+  showLoader(false);
+}
+window.addEventListener("load", loadHadithData);
+
+// --------- UI UPDATE LOGIC -------------
 function updateSiteLanguage() {
-  // Static text
   document.getElementById('searchInput').placeholder = uiText[siteLang].searchPlaceholder;
   document.querySelector('.search-tips').textContent = uiText[siteLang].searchTips;
   document.getElementById('majorBooks').textContent = uiText[siteLang].majorBooks;
@@ -128,24 +104,21 @@ function updateSiteLanguage() {
   }
 }
 
-// --------- RENDER HADITH BUTTONS ------------
+// --------- RENDER HADITH BUTTONS --------
 function renderGrid(list, gridId) {
   const el = document.getElementById(gridId);
   el.innerHTML = "";
   list.forEach(item => {
     const btn = document.createElement("button");
     btn.className = "hadith-btn";
-    btn.setAttribute('aria-label', item[siteLang]); // accessibility
+    btn.setAttribute('aria-label', item[siteLang]);
     btn.onclick = () => openModal(item, 0, list);
-    btn.innerHTML = `
-      <span class="en">${item[siteLang]}</span>
-      <span class="ar">${item.ar}</span>
-    `;
+    btn.innerHTML = `<span class="en">${item[siteLang]}</span>`;
     el.appendChild(btn);
   });
 }
 
-// --------- MODAL LOGIC -----------------------
+// --------- MODAL LOGIC ------------------
 function openModal(book, idx, list) {
   currentBook = book;
   currentIdx = idx;
@@ -155,15 +128,12 @@ function openModal(book, idx, list) {
   document.getElementById("modal").classList.add("show");
   document.getElementById("modalBlur").classList.add("show");
   document.body.style.overflow = "hidden";
-  // scroll to top for modal
   document.getElementById("modal").scrollTop = 0;
 }
 function showHadith() {
   const h = currentBook.hadith[currentIdx];
-  document.getElementById("modalArabic").style.display = (modalLang === "ar") ? "block" : "none";
   document.getElementById("modalEnglish").style.display = (modalLang === "en") ? "block" : "none";
   document.getElementById("modalHindi").style.display = (modalLang === "hi") ? "block" : "none";
-  document.getElementById("modalArabic").textContent = h.ar;
   document.getElementById("modalEnglish").textContent = h.en;
   document.getElementById("modalHindi").textContent = h.hi;
   // Prev button disable logic
@@ -190,7 +160,6 @@ function prevHadith() {
 function switchLanguage() {
   // ONLY Modal language change hota hai
   if (modalLang === "en") modalLang = "hi";
-  else if (modalLang === "hi") modalLang = "ar";
   else modalLang = "en";
   showHadith();
 }
@@ -228,7 +197,7 @@ async function shareHadith() {
   }
 }
 
-// --------- SEARCH LOGIC ----------------------
+// --------- SEARCH LOGIC -----------------
 document.getElementById("searchInput").addEventListener("input", (e) => {
   const q = e.target.value.trim().toLowerCase();
   filterGrid(hadithBooks, "hadithGrid", q);
@@ -238,17 +207,15 @@ document.getElementById("searchInput").addEventListener("input", (e) => {
 function filterGrid(list, gridId, q) {
   const el = document.getElementById(gridId);
   el.innerHTML = "";
-  // Filter on book name OR any hadith text (en/hi/ar)
+  // Filter on book name OR any hadith text (en/hi)
   const filtered = (!q)
     ? list
     : list.filter(item =>
         item.en.toLowerCase().includes(q) ||
         (item.hi && item.hi.toLowerCase().includes(q)) ||
-        (item.ar && item.ar.includes(q)) ||
         (item.hadith && item.hadith.some(h =>
           (h.en && h.en.toLowerCase().includes(q)) ||
-          (h.hi && h.hi.toLowerCase().includes(q)) ||
-          (h.ar && h.ar.includes(q))
+          (h.hi && h.hi.toLowerCase().includes(q))
         ))
       );
   if (!filtered.length) {
@@ -260,22 +227,19 @@ function filterGrid(list, gridId, q) {
     btn.className = "hadith-btn";
     btn.setAttribute('aria-label', item[siteLang]);
     btn.onclick = () => openModal(item, 0, list);
-    btn.innerHTML = `
-      <span class="en">${item[siteLang]}</span>
-      <span class="ar">${item.ar}</span>
-    `;
+    btn.innerHTML = `<span class="en">${item[siteLang]}</span>`;
     el.appendChild(btn);
   });
 }
 
-// --------- SIDE MENU LOGIC -------------------
+// --------- SIDE MENU LOGIC --------------
 const menuBtn = document.getElementById("menuBtn");
 const sideMenu = document.getElementById("sideMenu");
 const sideMenuBlur = document.getElementById("sideMenuBlur");
 menuBtn.onclick = () => { sideMenu.classList.add("open"); sideMenuBlur.classList.add("show"); };
 sideMenuBlur.onclick = () => { sideMenu.classList.remove("open"); sideMenuBlur.classList.remove("show"); };
 
-// --------- LANGUAGE SWITCH (SITE-WIDE) --------
+// --------- LANGUAGE SWITCH --------------
 document.getElementById("langEn").onclick = () => {
   document.getElementById("langEn").classList.add("active");
   document.getElementById("langHi").classList.remove("active");
@@ -289,7 +253,7 @@ document.getElementById("langHi").onclick = () => {
   updateSiteLanguage();
 };
 
-// ---------- MODAL BUTTONS -------------------
+// ---------- MODAL BUTTONS ---------------
 document.getElementById("modalBlur").onclick = closeModal;
 document.getElementById("copyBtn").onclick = copyHadith;
 document.getElementById("shareBtn").onclick = shareHadith;
@@ -298,9 +262,8 @@ document.getElementById("switchLangBtn").onclick = switchLanguage;
 document.getElementById("prevBtn").onclick = prevHadith;
 document.getElementById("nextBtn").onclick = nextHadith;
 
-// --------- MODAL: OPEN BY HASH ---------
-window.addEventListener("load", () => {
-  updateSiteLanguage();
+// --------- MODAL: OPEN BY HASH ----------
+window.addEventListener("hashchange", () => {
   if (location.hash) {
     const id = location.hash.slice(1);
     let book = hadithBooks.concat(otherBooks).find(b => b.id === id);
@@ -308,21 +271,7 @@ window.addEventListener("load", () => {
   }
 });
 
-// --------- KEYBOARD SHORTCUTS (Accessibility) -----
+// --------- KEYBOARD SHORTCUTS ----------
 document.addEventListener("keydown", (e) => {
   if (e.key === "Escape") closeModal();
 });
-
-// --------- LOADER (for future async) --------------
-// HTML me yeh line daal dein jahan list dikhegi:
-/*
-  <div id="loader" style="display:none;">Loading...</div>
-*/
-// Loader show/hide example
-function showLoader(show) {
-  document.getElementById("loader").style.display = show ? "block" : "none";
-}
-
-// --- Responsive hint (CSS/HTML) ---
-// Example HTML me grid ya body pe class="responsive" lagayein
-// Aur CSS me media query use karein

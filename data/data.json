@@ -1,0 +1,43 @@
+{
+  "hadithBooks": [
+    {
+      "en": "Sahih al-Bukhari",
+      "hi": "सहीह अल-बुखारी",
+      "hadith": [
+        {
+          "en": "The reward of deeds depends upon intentions.",
+          "hi": "कर्मों का फल नीयत पर निर्भर करता है।"
+        },
+        {
+          "en": "Actions are judged by intentions.",
+          "hi": "कर्मों का मूल्यांकन नीयत के अनुसार होता है।"
+        }
+      ],
+      "id": "bukhari"
+    },
+    {
+      "en": "Sahih Muslim",
+      "hi": "सहीह मुस्लिम",
+      "hadith": [
+        {
+          "en": "None of you truly believes until he loves for his brother what he loves for himself.",
+          "hi": "तुममें से कोई सच्चा मोमिन नहीं हो सकता जब तक वह अपने भाई के लिए वही न चाहे जो वह अपने लिए चाहता है।"
+        }
+      ],
+      "id": "muslim"
+    }
+  ],
+  "otherBooks": [
+    {
+      "en": "Riyad as-Salihin",
+      "hi": "रियादुस-सालिहीन",
+      "hadith": [
+        {
+          "en": "God does not look at your forms or your wealth but He looks at your hearts and your deeds.",
+          "hi": "अल्लाह तुम्हारे रूप या संपत्ति को नहीं देखता, बल्कि तुम्हारे दिल और कर्म को देखता है।"
+        }
+      ],
+      "id": "riyad"
+    }
+  ]
+}

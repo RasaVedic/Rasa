@@ -4,13 +4,42 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>BHAIVEDIC Hadith App</title>
+  <meta name="description" content="Professional Hadith Collection App by BhaiVedic. Study & awareness with multi-language support.">
+
+  <!-- Favicon (browser tab) -->
+  <link rel="icon" type="image/x-icon" href="assets/images/favicon.ico">
+  <!-- Apple Touch Icon (iOS devices) -->
+  <link rel="apple-touch-icon" href="assets/images/apple-touch-icon.png">
+  <!-- PWA/Android Icons -->
+  <link rel="icon" type="image/png" sizes="192x192" href="assets/images/icon-192.png">
+  <link rel="icon" type="image/png" sizes="512x512" href="assets/images/icon-512.png">
+  <link rel="manifest" href="manifest.json">
+
+  <!-- Open Graph / Social Preview -->
+  <meta property="og:title" content="BHAIVEDIC Hadith App">
+  <meta property="og:description" content="Study & awareness with multi-language support.">
+  <meta property="og:image" content="assets/images/social-preview.png">
+  <meta property="og:type" content="website">
+
+  <!-- Twitter Card preview (optional, recommended) -->
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="BHAIVEDIC Hadith App">
+  <meta name="twitter:description" content="Study & awareness with multi-language support.">
+  <meta name="twitter:image" content="assets/images/social-preview.png">
+
+  <!-- (Optional) manifest for PWA support -->
+  <!-- <link rel="manifest" href="manifest.json"> -->
+
   <link rel="stylesheet" href="style.css">
 </head>
 <body>
+
   <!-- Top Banner -->
   <header class="top-banner">
-    <span class="bhaivedic"><span class="bhai">BHAI</span><span class="vedic">VEDIC</span></span>
-    <button class="menu-btn" id="menuBtn" aria-label="Open menu">&#9776;</button>
+    <span class="bhaivedic" aria-label="BHAIVEDIC branding">
+      <span class="bhai">BHAI</span><span class="vedic">VEDIC</span>
+    </span>
+    <button class="menu-btn" id="menuBtn" aria-label="Open menu" tabindex="0">&#9776;</button>
   </header>
 
   <!-- Side Menu -->
@@ -20,10 +49,10 @@
       <p id="aboutDesc"></p>
       <h2 id="faqTitle"></h2>
       <div class="faq-icons">
-        <a href="https://x.com/BhaiVedic" target="_blank" title="X (Twitter)" aria-label="X (Twitter)">
+        <a href="https://x.com/BhaiVedic" target="_blank" rel="noopener" title="X (Twitter)" aria-label="X (Twitter)">
           <img src="https://cdn.jsdelivr.net/gh/simple-icons/simple-icons/icons/x.svg" alt="X">
         </a>
-        <a href="https://github.com/BhaiVedic" target="_blank" title="GitHub" aria-label="GitHub">
+        <a href="https://github.com/BhaiVedic" target="_blank" rel="noopener" title="GitHub" aria-label="GitHub">
           <img src="https://cdn.jsdelivr.net/gh/simple-icons/simple-icons/icons/github.svg" alt="GitHub">
         </a>
         <a href="mailto:your@email.com" title="Email" aria-label="Email">
@@ -32,8 +61,8 @@
       </div>
       <h2 id="langTitle"></h2>
       <div class="lang-toggle" role="group" aria-label="Language switcher">
-        <button id="langEn" class="active" aria-pressed="true">English</button>
-        <button id="langHi" aria-pressed="false">हिन्दी</button>
+        <button id="langEn" class="active" aria-pressed="true" tabindex="0">English</button>
+        <button id="langHi" aria-pressed="false" tabindex="0">हिन्दी</button>
       </div>
     </div>
   </nav>
@@ -41,16 +70,20 @@
 
   <!-- Search Bar Section -->
   <div class="search-section">
-    <input type="text" id="searchInput" placeholder="" autocomplete="off" aria-label="Search books or hadith">
+    <label for="searchInput" class="visually-hidden">Search</label>
+    <input type="text" id="searchInput" placeholder="" autocomplete="off" aria-label="Search books or hadith" tabindex="0">
     <span class="search-icon">&#128269;</span>
-    <a href="#" class="search-tips" id="searchTips" tabindex="0"></a>
+    <a href="#" class="search-tips" id="searchTips" tabindex="0" onclick="openTipsModal(event)">Search Tips</a>
   </div>
 
   <!-- Loader (for async/loading states) -->
-  <div id="loader" style="display:none;" aria-live="polite" class="loader">Loading...</div>
+  <div id="loader" style="display:none;" aria-live="polite" class="loader">
+    <span class="spinner"></span> Loading...
+  </div>
 
   <!-- Main Content -->
   <main>
+    <h1 class="visually-hidden">Hadith Collection App by BhaiVedic</h1>
     <div class="section-title" id="majorBooks"></div>
     <div class="hadith-grid responsive" id="hadithGrid"></div>
     <div class="section-title" id="otherCollections"></div>
@@ -60,33 +93,106 @@
 
   <!-- Modal for Hadith -->
   <div class="modal-blur" id="modalBlur"></div>
-  <div class="modal" id="modal" role="dialog" aria-modal="true" aria-labelledby="modalArabic modalEnglish modalHindi">
+  <div class="modal" id="modal" role="dialog" aria-modal="true" aria-labelledby="modalEnglish modalHindi">
     <div class="modal-content" id="modalContent">
-      <div class="hadith-arabic" id="modalArabic"></div>
       <div class="hadith-english" id="modalEnglish"></div>
       <div class="hadith-hindi" id="modalHindi"></div>
       <div class="modal-actions">
-        <button id="copyBtn" type="button" title="" aria-label="Copy hadith"><span class="icon">📋</span> <span id="copyLabel"></span></button>
-        <button id="shareBtn" type="button" title="" aria-label="Share hadith"><span class="icon">🔗</span> <span id="shareLabel"></span></button>
-        <button id="backBtn" title="" aria-label="Close modal"><span class="icon">⬅️</span> <span id="backLabel"></span></button>
-        <button id="switchLangBtn" title="" aria-label="Switch language"><span class="icon">🌐</span> <span id="switchLangLabel"></span></button>
-        <button id="nextBtn" title="" aria-label="Next hadith"><span class="icon">➡️</span> <span id="nextLabel"></span></button>
-        <button id="prevBtn" type="button" title="" aria-label="Previous hadith"><span class="icon">⬅️</span> <span id="prevLabel"></span></button>
+        <button id="copyBtn" type="button" title="" aria-label="Copy hadith" tabindex="0">
+          <span class="icon">📋</span> <span id="copyLabel"></span>
+        </button>
+        <button id="shareBtn" type="button" title="" aria-label="Share hadith" tabindex="0">
+          <span class="icon">🔗</span> <span id="shareLabel"></span>
+        </button>
+        <button id="backBtn" title="" aria-label="Close modal" tabindex="0">
+          <span class="icon">⬅️</span> <span id="backLabel"></span>
+        </button>
+        <button id="switchLangBtn" title="" aria-label="Switch language" tabindex="0">
+          <span class="icon">🌐</span> <span id="switchLangLabel"></span>
+        </button>
+        <button id="nextBtn" title="" aria-label="Next hadith" tabindex="0">
+          <span class="icon">➡️</span> <span id="nextLabel"></span>
+        </button>
+        <button id="prevBtn" type="button" title="" aria-label="Previous hadith" tabindex="0">
+          <span class="icon">⬅️</span> <span id="prevLabel"></span>
+        </button>
       </div>
+    </div>
+  </div>
+
+  <!-- Search Tips Modal -->
+  <div class="modal-blur" id="tipsModalBlur"></div>
+  <div class="modal" id="tipsModal" role="dialog" aria-modal="true" aria-labelledby="tipsModalTitle">
+    <div class="modal-content">
+      <h2 id="tipsModalTitle">Search Tips</h2>
+      <ul>
+        <li>Search by book name, hadith, or keyword.</li>
+        <li>Use English or Hindi for searching.</li>
+        <li>Partial keywords are supported.</li>
+      </ul>
+      <button onclick="closeTipsModal()" tabindex="0">Close</button>
     </div>
   </div>
 
   <!-- Footer -->
   <footer>
-    <div>© BHAIVEDIC</div>
+    <div>© BHAIVEDIC · Made with <span aria-label="love" style="color:#ff7eb9;">&#10084;&#65039;</span> by BhaiVedic</div>
     <div id="footerEducational"></div>
     <div>
-      <a href="https://x.com/BhaiVedic" target="_blank" aria-label="X (Twitter)">
+      <a href="https://x.com/BhaiVedic" target="_blank" aria-label="X (Twitter)" rel="noopener">
         <img src="https://cdn.jsdelivr.net/gh/simple-icons/simple-icons/icons/x.svg" class="footer-icon" alt="X">
       </a>
       <span id="footerContact"></span>
     </div>
   </footer>
-  <script src="script.js"></script>
+
+  <script src="script.js" defer></script>
+  <style>
+    /* Visually hidden for screen readers */
+    .visually-hidden {
+      position: absolute !important;
+      height: 1px; width: 1px;
+      overflow: hidden;
+      clip: rect(1px, 1px, 1px, 1px);
+      white-space: nowrap;
+    }
+    /* Loader spinner (modern) */
+    .spinner {
+      display: inline-block;
+      width: 20px; height: 20px;
+      border: 3px solid #60c0c0;
+      border-radius: 50%;
+      border-top: 3px solid #fff0;
+      animation: spin 0.8s linear infinite;
+      vertical-align: middle;
+      margin-right: 8px;
+    }
+    @keyframes spin {
+      100% { transform: rotate(360deg); }
+    }
+  </style>
+  <script>
+    // Search Tips Modal logic (accessibility/focus)
+    function openTipsModal(event) {
+      event.preventDefault();
+      document.getElementById("tipsModal").classList.add("show");
+      document.getElementById("tipsModalBlur").classList.add("show");
+      document.body.style.overflow = "hidden";
+      // Focus on close button for accessibility
+      setTimeout(() => {
+        document.querySelector("#tipsModal button").focus();
+      }, 200);
+    }
+    function closeTipsModal() {
+      document.getElementById("tipsModal").classList.remove("show");
+      document.getElementById("tipsModalBlur").classList.remove("show");
+      document.body.style.overflow = "";
+    }
+    document.getElementById("tipsModalBlur").onclick = closeTipsModal;
+    // Close tips modal with Escape key
+    document.addEventListener("keydown", function(e) {
+      if (e.key === "Escape") closeTipsModal();
+    });
+  </script>
 </body>
 </html>
